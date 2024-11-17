@@ -1,0 +1,33 @@
+.node circle {
+    stroke: black;
+    stroke-width: 2px;
+    cursor: pointer; /* Make the nodes look draggable */
+}
+
+.arrowhead {
+    fill: red;
+}
+
+.flow-arrowhead {
+    fill: blue;
+}
+
+.label {
+    font-family: Arial;
+    font-size: 12px;
+    text-anchor: middle;
+}
+
+.link {
+    stroke: black;
+    stroke-width: 2;
+}
+
+.causality-line {
+    stroke: gray;
+    stroke-width: 1;
+}
+
+.causality-label {
+    pointer-events: none; /* Prevents labels from interfering with drag events */
+}

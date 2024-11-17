@@ -1,0 +1,17 @@
+{
+    "nodes": [
+        { "id": "Pump (Sf)", "x": 100, "y": 100 },
+        { "id": "1-junction (J1)", "x": 300, "y": 100 },
+        { "id": "Throttle (R)", "x": 500, "y": 100 },
+        { "id": "Tubes (I)", "x": 100, "y": 300 },
+        { "id": "0-junction (J0)", "x": 500, "y": 300 },
+        { "id": "Tank (C)", "x": 700, "y": 200 }
+    ],
+    "edges": [
+        { "source": "Pump (Sf)", "target": "1-junction (J1)", "causality": "e->f" },
+        { "source": "1-junction (J1)", "target": "Throttle (R)", "causality": "e->f" },
+        { "source": "1-junction (J1)", "target": "Tubes (I)", "causality": "e->f" },
+        { "source": "1-junction (J1)", "target": "0-junction (J0)", "causality": "f->e" },
+        { "source": "0-junction (J0)", "target": "Tank (C)", "causality": "e->f" }
+    ]
+}
