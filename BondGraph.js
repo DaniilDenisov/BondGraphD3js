@@ -72,7 +72,7 @@ const causalityLines = svg.selectAll(".causality-line")
     .enter().append("line")
     .attr("class", "causality-line")
     .attr("stroke", "gray")
-    .attr("stroke-width", 1);
+    .attr("stroke-width", 2);
 
 // Add causality labels
 const edgeLabel = svg.selectAll(".causality-label")
@@ -140,26 +140,38 @@ function updateLinks() {
         });
 
     causalityLines
-        .attr("x1", d => calculateEdgeCoordinates(
-            nodes.find(n => n.id === d.source),
-            nodes.find(n => n.id === d.target),
-            d.linePosition
-        ).perpX1)
-        .attr("y1", d => calculateEdgeCoordinates(
-            nodes.find(n => n.id === d.source),
-            nodes.find(n => n.id === d.target),
-            d.linePosition
-        ).perpY1)
-        .attr("x2", d => calculateEdgeCoordinates(
-            nodes.find(n => n.id === d.source),
-            nodes.find(n => n.id === d.target),
-            d.linePosition
-        ).perpX2)
-        .attr("y2", d => calculateEdgeCoordinates(
-            nodes.find(n => n.id === d.source),
-            nodes.find(n => n.id === d.target),
-            d.linePosition
-        ).perpY2);
+        .attr("x1", d => {
+            const linePosition = d.causality === "e->f" ? "head" : "tail";  // Set line position based on causality
+            return calculateEdgeCoordinates(
+                nodes.find(n => n.id === d.source),
+                nodes.find(n => n.id === d.target),
+                linePosition
+            ).perpX1;
+        })
+        .attr("y1", d => {
+            const linePosition = d.causality === "e->f" ? "head" : "tail";  // Set line position based on causality
+            return calculateEdgeCoordinates(
+                nodes.find(n => n.id === d.source),
+                nodes.find(n => n.id === d.target),
+                linePosition
+            ).perpY1;
+        })
+        .attr("x2", d => {
+            const linePosition = d.causality === "e->f" ? "head" : "tail";  // Set line position based on causality
+            return calculateEdgeCoordinates(
+                nodes.find(n => n.id === d.source),
+                nodes.find(n => n.id === d.target),
+                linePosition
+            ).perpX2;
+        })
+        .attr("y2", d => {
+            const linePosition = d.causality === "e->f" ? "head" : "tail";  // Set line position based on causality
+            return calculateEdgeCoordinates(
+                nodes.find(n => n.id === d.source),
+                nodes.find(n => n.id === d.target),
+                linePosition
+            ).perpY2;
+        });
 
     edgeLabel
         .attr("x", d => (nodes.find(n => n.id === d.source).x + nodes.find(n => n.id === d.target).x) / 2)
