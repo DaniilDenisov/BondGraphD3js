@@ -15,19 +15,25 @@ set /p venv_name="Enter the name for the new virtual environment (default: %defa
 :: Use default name if no input is provided
 if "%venv_name%"=="" set venv_name=%default_venv_name%
 
-:: Create the virtual environment
-%python_path%python.exe -m venv %venv_name%
+:: Check if the folder already exists
+if exist %venv_name%\ (
+    echo The virtual environment '%venv_name%' already exists. No need to create a new one.
+) else (
+    :: Create the virtual environment if the folder does not exist
+    %python_path%python.exe -m venv %venv_name%
+    
+    :: Activate the virtual environment
+    call %venv_name%\Scripts\activate
 
-:: Activate the virtual environment
-call %venv_name%\Scripts\activate
+    :: Upgrade pip
+    python -m pip install --upgrade pip
 
-:: Upgrade pip
-python -m pip install --upgrade pip
+    :: Deactivate the virtual environment
+    deactivate
 
-:: Deactivate the virtual environment
-deactivate
+    echo Virtual environment '%venv_name%' created successfully.
+)
 
-echo Virtual environment '%venv_name%' created.
 pause
 endlocal
 
