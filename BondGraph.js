@@ -1,5 +1,6 @@
 import { drawArrowheadEffort } from './drawArrowheadEffort.js';
 import { drawArrowheadFlow } from './drawArrowheadFlow.js';
+import { calculateEdgeCoordinates } from './calculateEdgeCoordinates.js';
 
 d3.json("BondGraph.json").then(data => {
 // Bond graph data: nodes (elements) and edges (bonds)
@@ -11,50 +12,11 @@ const svg = d3.select("svg");
 
 // Define half-arrowhead for effort (right-angle arrow)
 drawArrowheadEffort(svg);
-
 // Define half-arrowhead for flow
 drawArrowheadFlow(svg);
 
+
 const nodeRadius = 35; 
-
-// Function to calculate shortened line positions and perpendicular lines
-function calculateEdgeCoordinates(source, target, linePosition = 'middle') {
-    const dx = target.x - source.x;
-    const dy = target.y - source.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    const shortenDistance = nodeRadius + 5; 
-
-    const ratio = shortenDistance / distance;
-    const sourceX = source.x + dx * ratio;
-    const sourceY = source.y + dy * ratio;
-    const targetX = target.x - dx * ratio;
-    const targetY = target.y - dy * ratio;
-
-    const perpendicularDx = -dy;
-    const perpendicularDy = dx;
-    const perpendicularLength = 10;
-
-    let normalX, normalY;
-    if (linePosition === 'head') {
-        normalX = targetX;
-        normalY = targetY;
-    } else if (linePosition === 'tail') {
-        normalX = sourceX;
-        normalY = sourceY;
-    } else {
-        normalX = (sourceX + targetX) / 2;
-        normalY = (sourceY + targetY) / 2;
-    }
-
-    const perpX1 = normalX + perpendicularDx / distance * perpendicularLength;
-    const perpY1 = normalY + perpendicularDy / distance * perpendicularLength;
-    const perpX2 = normalX - perpendicularDx / distance * perpendicularLength;
-    const perpY2 = normalY - perpendicularDy / distance * perpendicularLength;
-
-    return {
-        sourceX, sourceY, targetX, targetY, perpX1, perpY1, perpX2, perpY2
-    };
-}
 
 
 // Draw Edjes between nodes
@@ -113,28 +75,36 @@ function updateLinks() {
         .attr("x1", d => {
             const { sourceX } = calculateEdgeCoordinates(
                 nodes.find(n => n.id === d.source),
-                nodes.find(n => n.id === d.target)
+                nodes.find(n => n.id === d.target),
+				'middle',
+				nodeRadius
             );
             return sourceX;
         })
         .attr("y1", d => {
             const { sourceY } = calculateEdgeCoordinates(
                 nodes.find(n => n.id === d.source),
-                nodes.find(n => n.id === d.target)
+                nodes.find(n => n.id === d.target),
+				'middle',
+				nodeRadius
             );
             return sourceY;
         })
         .attr("x2", d => {
             const { targetX } = calculateEdgeCoordinates(
                 nodes.find(n => n.id === d.source),
-                nodes.find(n => n.id === d.target)
+                nodes.find(n => n.id === d.target),
+				'middle',
+				nodeRadius
             );
             return targetX;
         })
         .attr("y2", d => {
             const { targetY } = calculateEdgeCoordinates(
                 nodes.find(n => n.id === d.source),
-                nodes.find(n => n.id === d.target)
+                nodes.find(n => n.id === d.target),
+				'middle',
+				nodeRadius
             );
             return targetY;
         });
@@ -145,7 +115,8 @@ function updateLinks() {
             return calculateEdgeCoordinates(
                 nodes.find(n => n.id === d.source),
                 nodes.find(n => n.id === d.target),
-                linePosition
+                linePosition,
+				nodeRadius
             ).perpX1;
         })
         .attr("y1", d => {
@@ -153,7 +124,8 @@ function updateLinks() {
             return calculateEdgeCoordinates(
                 nodes.find(n => n.id === d.source),
                 nodes.find(n => n.id === d.target),
-                linePosition
+                linePosition,
+				nodeRadius
             ).perpY1;
         })
         .attr("x2", d => {
@@ -161,7 +133,8 @@ function updateLinks() {
             return calculateEdgeCoordinates(
                 nodes.find(n => n.id === d.source),
                 nodes.find(n => n.id === d.target),
-                linePosition
+                linePosition,
+				nodeRadius
             ).perpX2;
         })
         .attr("y2", d => {
@@ -169,7 +142,8 @@ function updateLinks() {
             return calculateEdgeCoordinates(
                 nodes.find(n => n.id === d.source),
                 nodes.find(n => n.id === d.target),
-                linePosition
+                linePosition,
+				nodeRadius
             ).perpY2;
         });
 
